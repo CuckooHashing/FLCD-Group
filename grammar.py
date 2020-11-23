@@ -25,9 +25,9 @@ class Grammar:
         f = open(file_name)
 
         line = f.readline().strip()
-        non_term = line.split(",")
+        non_term = line.split(" ")
         line = f.readline().strip()
-        terminals = line.split(",")
+        terminals = line.split(" ")
 
         prods = {}
         while True:

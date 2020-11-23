@@ -1,0 +1,26 @@
+P A STMTL CMP STMT SIMPL STRUCT ASSGN IOST ID EXP TERM IFSTM ITRSTM ELSEIFSTM ELSESTM CONDITION RELATION TYPE1 TYPE CONST DECLIST DECLST
+main_body integer boolean string if else else_if then iterate and_do <- - = < > <= >= [ ] { } ( ) , ; read_integer read_string read_boolean show_to_console eps id intConst stringConst boolConst dynamic-array
+P -> main_body { CMP } | eps
+CMP -> STMTL | eps
+STMTL -> STMT | STMT STMTL
+STMT -> SIMPL ; | STRUCT ; | eps
+SIMPL -> ASSGN
+ASSGN -> ID <- EXP | ID <- IOST | ID <- CONST
+IOST -> read_integer ( ) | read_boolean ( ) | read_string ( ) | show_to_console ( ID )
+EXP -> + TERM EXP | TERM | - TERM EXP | eps
+TERM -> * FACTOR TERM | FACTOR | / FACTOR TERM | % FACTOR TERM | eps
+FACTOR -> EXP | ID | intConst | eps
+STRUCT -> CMP | IFSTM | ITRSTM
+IFSTM -> if CONDITION then [ STMTL ] | if CONDITION then [ STMTL ] ELSESTM | if CONDITION then [ STMTL ] ELSEIFSTM ELSESTM | if CONDITION then [ STMTL ] ELSEIFSTM
+ELSEIFSTM -> else-if CONDITION then [ STMTL ]
+ELSESTM -> else [ STMTL ]
+ITRSTM -> iterate [ STMT , CONDITION , STMT ] and_do [ STMTL ]
+CONDITION -> EXP RELATION EXP
+RELATION -> < | <= | = | <> | >= | >
+ID -> id
+TYPE1 -> integer | boolean | string
+CONST -> intConst | boolConst | stringConst
+DECLIST -> DECLST | DECLST DECLST
+DECLST -> TYPE ID ;
+ARRAYDEC -> dynamic-array [ TYPE1 ] ;
+TYPE -> TYPE1 | ARRAYDEC
