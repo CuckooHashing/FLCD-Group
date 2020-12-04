@@ -138,10 +138,101 @@ class LL1:
         return l
 
 
+    def get_prods_with_nt_in_rhs(self, nonterminal):
+        productions_that_contain_nonterminal = {}
+        # values = self.grammar.productions
+        for key in self.grammar.productions:
+            values = self.grammar.productions[key]
+            for value in values:
+                if nonterminal in value:
+                    if key in productions_that_contain_nonterminal.keys():
+                        productions_that_contain_nonterminal[key].append(value)
+                    else:
+                        productions_that_contain_nonterminal[key] = [value]
+        
+        return productions_that_contain_nonterminal
 
-ll1 = LL1("gr1.txt")
+
+
+    def initialize_for_follow(self):
+
+        follow_map = {}
+        for nt in self.grammar.nonterminals:
+            follow_map[nt] = []        
+        return follow_map
+
+
+    def concatenate_for_follow(self, l1:list, l2: list):
+
+        if "eps" in l1:
+            l1.remove("eps") 
+            l1+=l2 
+            return l1 
+
+        return l1
+
+
+    def get_first_for_prod(self, prod):
+        result = ["eps"]
+        contains_terminal = False
+        for s in prod:
+            first = [] 
+            if s in self.grammar.terminals:
+                first.append(s)
+                contains_terminal = True
+            else:
+                first = self.real_first[s]
+            result = self.concatenate_for_follow(result, first)
+            if contains_terminal or "eps" in first:
+                return list(set(result))
+        
+        return list(set(result))
+
+    def follow_iterative(self):
+
+        follow_map = self.initialize_for_follow()
+        follow_map[self.grammar.starting_symbol].append("eps")
+        while True:
+            current_follow_map = self.initialize_for_follow()
+            current_follow_map[self.grammar.starting_symbol].append("eps")
+            for nt in self.grammar.nonterminals:
+                current_follow_map[nt]+= follow_map[nt]
+                prods = self.get_prods_with_nt_in_rhs(nt)
+                for key in prods.keys():
+                    lhss = prods[key]
+                    for lhs in lhss:
+                        toks = lhs.split(" ")
+                        index = toks.index(nt)
+                        if index == len(toks) - 1:
+                            if key!=nt:
+                                current_follow_map[nt]+=follow_map[key]
+                        else:
+                            first = self.get_first_for_prod(toks[index+1:])
+                            if "eps" in first:
+                                first.remove("eps")
+                                current_follow_map[nt] += follow_map[key] 
+
+                            current_follow_map[nt] += first 
+            
+            for key in current_follow_map.keys():
+                current_follow_map[key]  = set(current_follow_map[key])
+            contin = False
+            for key in follow_map.keys():
+
+                if len(follow_map[key]) != len(current_follow_map[key]):
+                    contin = True
+                    break 
+            
+            if not contin:
+                return current_follow_map
+            follow_map = current_follow_map
+           
+                            
+
+
+ll1 = LL1("gr3.txt")
 print("--------------------------------")
 ll1.FIRST()
-ll1.FOLLOW()
+# ll1.FOLLOW()
 print(ll1.real_first)
-print(ll1.follow)
+print(ll1.follow_iterative())
