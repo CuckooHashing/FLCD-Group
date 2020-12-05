@@ -1,74 +1,85 @@
 
-# from grammar import Grammar
+from grammar import Grammar
+from LL1 import LL1
+from parsing import Parser
 
 class Node:
-    def __init__(self,line,column, val):
+    def __init__(self,val,parent, soeur, index):
         self.val = val 
-        self.left_child = None 
-        self.right_sibiling = None
+        self.parent = parent 
+        self.soeur = soeur
+        self.index = index
     
-    def __str__(self):
-        return self.val + ": left child: " + self.left_child.val + ": right sibiling: " + self.right_sibiling.val  
-
-
 
 class ParseTree:
-    def __init__(self, grammar: Grammar):
-        self.grammar = grammar 
-        self.rows = self.grammar.nonterminals + self.grammar.terminals 
-        self.columns = self.grammar.terminals 
-        self.root = None 
+    def __init__(self, ll1: LL1, production_string:[int], productions: dict):
+        self.ll1 = ll1
+        self.grammar = self.ll1.grammar 
+        self.production_string = production_string
+        self.productions =productions
+        self.crt = 1
+        self.nodes = []
+        print(self.production_string)
+
+        self.build_nightmare_tree()
 
 
+    
+    def build_nightmare_tree(self):
 
-#     def get_value_of_node(self, line, column):
-        
-#         if line == column:
-#             return "pop"
-#         else:
-#             return "err"
+        #since it goes dfs ish, we need a stack 
+        stack = []
+        index = 0
+        value = self.productions[self.production_string[0]][0]
+        self.root = Node(value, None, None, self.crt)
+        self.crt+=1
+        self.nodes.append(self.root)
+        stack.append(self.root)
 
-#     def create_tree(self):
-#         self.root = Node(self.rows[0], self.columns[0], "err")
-#         current = self.root
-#         descending = self.root
-#         for j in range(1,len(self.columns)):
-#             val = self.get_value_of_node(self.rows[0], self.columns)
-#             current.right_sibiling = Node(self.rows[0], self.columns[j], "err")
-#             current = current.right_sibiling
-#         for i in range(1, len(self.rows)):
-#             current = Node(self.rows[i], self.columns[j], "err")
-#             descending.left_child = current
-#             descending = descending.left_child
-#             for j in range(1,len(self.columns)):
-#                 current.right_sibiling = Node(self.rows[i], self.columns[j], "err")
-#                 current = current.right_sibiling
+        while index<len(self.production_string) and len(stack)>0:
+            current = stack[-1]
 
+            if current.val in self.grammar.terminals or current.val == "eps":
+                while len(stack)>0 and stack[-1].soeur == None:
+                    stack.pop() 
+                if len(stack) > 0:
+                    stack.pop() 
+                if len(stack) == 0:
+                    break  
 
-#     def print_tree(self):
+            else:
+                prod = self.productions[self.production_string[index]] 
+                
+                list_of_rhs = prod[1].split(" ")
 
-#         current = self.root 
-#         descending = self.root
-#         print(self.columns)
-#         while descending!=None:
-#             s = descending.line + " "
-#             while current!=None:
-#                 s+=current.val + " "
-#                 current = current.right_sibiling 
-#             print(s) 
-#             descending = descending.left_child
-#             current = descending
+                self.crt+=len(list_of_rhs) -1
+                for i in range(len(list_of_rhs)-1, -1, -1):
+                    prunc = Node(None, current.index, None, self.crt) 
+                    self.crt-=1 
+                    if i>0:
+                        prunc.soeur = self.crt
+                    else:
+                        prunc.soeur = None
+                    prunc.val = list_of_rhs[i]
+                    stack.append(prunc)
+                    self.nodes.append(prunc)
+                self.crt += len(list_of_rhs) + 1
+                index += 1
+    
+    def __str__(self):
+        string = ""
 
+        for node in self.nodes:
+            substring = ""
+            substring += str(node.index) + " " + str(node.val) + " " + str(node.parent) + " " + str(node.soeur) + "\n"
+            string += substring
+        return string
 
-# pt = ParseTree(Grammar.read_from_file("gr1.txt"))
-# pt.create_tree()
-# # pt.print_tree()
-# print("=========================================")
-# # print(pt.rows)
-# # print(pt.columns)
-# pt.print_tree()
+parser = Parser("gr1.txt")
+parser.create_the_nightmare_table()
+tree = ParseTree(parser.ll1, parser.parse(['eps', 'a', '+', 'a'], ['eps', 'S']), parser.productions)
 
-
+print(str(tree))
 
 
 
