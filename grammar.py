@@ -54,7 +54,7 @@ class Grammar:
         print(self.productions) 
 
 
-gram = Grammar.read_from_file("gr1.txt")
-gram.print_set_of_nonterminals()
-gram.print_set_of_terminals()
-gram.productions_for_nonterminal()
+# gram = Grammar.read_from_file("gr1.txt")
+# gram.print_set_of_nonterminals()
+# gram.print_set_of_terminals()
+# gram.productions_for_nonterminal()

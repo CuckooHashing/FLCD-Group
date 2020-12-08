@@ -106,13 +106,13 @@ class Parser:
 
 
 
-pareser = Parser("gr1.txt")
-# pareser.table[0][0] = 7
-print(pareser.rows)
-print(pareser.columns)
-pareser.create_the_nightmare_table()
+# pareser = Parser("gr1.txt")
+# # pareser.table[0][0] = 7
+# print(pareser.rows)
+# print(pareser.columns)
+# pareser.create_the_nightmare_table()
 
-for line in pareser.table:
-    print(line)
+# for line in pareser.table:
+#     print(line)
 
-print(pareser.parse(['eps', 'a', '+', 'a'], ['eps', 'S']))
+# print(pareser.parse(['eps', 'a', '+', 'a'], ['eps', 'S']))
