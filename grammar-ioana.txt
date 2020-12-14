@@ -3,7 +3,12 @@ main_body integer boolean string if else else_if then iterate and_do + * <- - = 
 START -> main_body { STMTL }
 STMTL -> STMT ; AUXSTM
 AUXSTM -> STMTL | eps
-STMT -> ASSGN | DECLST | IFSTM | ITRSTM 
+STMT -> ASSGN | DECLST | IFSTM | ITRSTM
+START STMT ID SIMPL STRUCT ASSGN IOST EXP IFSTM ITRSTM ELSESTM CONDITION RELATION TYPE1 TYPE CONST DECLST ARRAYDEC AUX AUX3 A B C D
+main_body integer boolean string if else else_if then iterate and_do + * <- - = < > <= >= <> [ ] { } ( ) / % , ; read_integer read_string read_boolean show_to_console eps id intConst stringConst boolConst dynamic_array
+START -> main_body { STMT ; }
+STMT -> SIMPL | STRUCT | eps
+SIMPL -> ASSGN | DECLST
 ASSGN -> ID <- AUX
 AUX -> EXP | IOST
 IOST -> read_integer ( stringConst ) | read_boolean ( stringConst ) | read_string ( stringConst ) | show_to_console ( ID )
@@ -11,7 +16,8 @@ EXP ->  B A
 A -> + B A | - B A | eps 
 B -> D C 
 C -> * D C | / D C | % D C | eps 
-D -> ( EXP ) | intConst | id 
+D -> ( EXP ) | intConst | id
+STRUCT ->  IFSTM | ITRSTM
 IFSTM -> if CONDITION then [ STMTL ] AUX3
 AUX3 -> eps | ELSESTM 
 ELSESTM -> else [ STMTL ]

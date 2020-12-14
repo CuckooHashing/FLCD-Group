@@ -75,11 +75,20 @@ class ParseTree:
             string += substring
         return string
 
-parser = Parser("gr1.txt")
-parser.create_the_nightmare_table()
-tree = ParseTree(parser.ll1, parser.parse(['eps', 'a', '+', 'a'], ['eps', 'S']), parser.productions)
 
-print(str(tree))
+if __name__ == "__main__":
+
+    parser = Parser("grammar-ioana.txt")
+    parser.create_the_nightmare_table()
+    parsing = parser.parse(['eps', 'intConst', '+', 'intConst'], ['eps', 'START'])
+    print(parsing)
+    parsing = parser.parse(['eps','}', ';' ,'intConst', '<-' ,'id', '{','main_body'], ['eps', 'START'])
+    print(parsing)
+    tree = ParseTree(parser.ll1, parsing, parser.productions)
+
+    print(str(tree))
+
+
 
 
 

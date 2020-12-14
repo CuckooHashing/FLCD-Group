@@ -11,7 +11,9 @@ def read_pif(file_name):
         line = f.readline() 
         if not line:
             break 
+
         toks = line.split(" ")
+
         result.append(toks[0])
 
     result.reverse() 
@@ -57,12 +59,18 @@ def main():
         parser.create_the_nightmare_table()
         parsing = parser.parse(out, ["eps", "START"])
         print(parsing)
+        out = read_pif("PIF.out")
+        # print(out)
+        parser.create_the_nightmare_table()
+        parsing = parser.parse(out, ["eps", "START"])
+        # print(parsing)
         if len(parsing) == 0:
             print("amu ii bai")
         elif type(parsing[0]) == type("mno"):
             print("amu ii bai si incepe la tokenul:")
             parsing.reverse()
             print(parsing)
+            print(parsing.reverse())
         else:
             tree = ParseTree(parser.ll1, parsing, parser.productions)
             print(str(tree))        
