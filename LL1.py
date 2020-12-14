@@ -230,9 +230,9 @@ class LL1:
                             
 
 
-ll1 = LL1("gr3.txt")
-print("--------------------------------")
-ll1.FIRST()
-# ll1.FOLLOW()
-print(ll1.real_first)
-print(ll1.follow_iterative())
+# ll1 = LL1("gr3.txt")
+# print("--------------------------------")
+# ll1.FIRST()
+# # ll1.FOLLOW()
+# print(ll1.real_first)
+# print(ll1.follow_iterative())

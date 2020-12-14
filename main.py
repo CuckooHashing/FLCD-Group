@@ -11,7 +11,9 @@ def read_pif(file_name):
         line = f.readline() 
         if not line:
             break 
-        toks = line.split(",")
+
+        toks = line.split(" ")
+
         result.append(toks[0])
 
     result.reverse() 
@@ -52,6 +54,11 @@ def main():
  
     if cmd == "2":
         parser = Parser("grammar-ioana.txt")
+        out = read_pif("PIFU_BUN2.txt")
+        # print(out)
+        parser.create_the_nightmare_table()
+        parsing = parser.parse(out, ["eps", "START"])
+        print(parsing)
         out = read_pif("PIF.out")
         # print(out)
         parser.create_the_nightmare_table()
@@ -61,6 +68,8 @@ def main():
             print("amu ii bai")
         elif type(parsing[0]) == type("mno"):
             print("amu ii bai si incepe la tokenul:")
+            parsing.reverse()
+            print(parsing)
             print(parsing.reverse())
         else:
             tree = ParseTree(parser.ll1, parsing, parser.productions)

@@ -106,9 +106,6 @@ class Parser:
 
 
             
-
-
-
 if __name__ == "__main__":
     pareser = Parser("grammar-ioana.txt")
     # pareser.table[0][0] = 7
@@ -119,4 +116,3 @@ if __name__ == "__main__":
     #     print(line)
     print(pareser.parse(['eps','}' ,';' ,'intConst', '<-' ,'id','{','main_body'], ['eps', 'START']))
     # print(pareser.parse(['eps','}',';', ')','stringConst','(','read_integer','<-','id','{','main_body'], ['eps', 'START']))
-
