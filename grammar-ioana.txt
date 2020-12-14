@@ -1,25 +1,26 @@
-START STMTL CMP STMT SIMPL STRUCT ASSGN IOST ID EXP TERM IFSTM ITRSTM ELSEIFSTM ELSESTM CONDITION RELATION TYPE1 TYPE CONST DECLST FACTOR ARRAYDEC
-main_body integer boolean string if else else_if then iterate and_do + * <- - = < > <= >= <> [ ] { } ( ) / % , ; read_integer read_string read_boolean show_to_console eps id intConst stringConst boolConst dynamic-array
-START -> main_body { CMP }
-CMP -> STMTL | eps
-STMTL -> STMT | STMT STMTL
-STMT -> SIMPL ; | STRUCT ; | eps
+START STMT ID SIMPL STRUCT ASSGN IOST EXP IFSTM ITRSTM ELSESTM CONDITION RELATION TYPE1 TYPE CONST DECLST ARRAYDEC AUX AUX3 A B C D
+main_body integer boolean string if else else_if then iterate and_do + * <- - = < > <= >= <> [ ] { } ( ) / % , ; read_integer read_string read_boolean show_to_console eps id intConst stringConst boolConst dynamic_array
+START -> main_body { STMT ; }
+STMT -> SIMPL | STRUCT | eps
 SIMPL -> ASSGN | DECLST
-ASSGN -> ID <- EXP | ID <- IOST | ID <- CONST
+ASSGN -> ID <- AUX
+AUX -> EXP | IOST
 IOST -> read_integer ( stringConst ) | read_boolean ( stringConst ) | read_string ( stringConst ) | show_to_console ( ID )
-EXP -> + TERM EXP | TERM | - TERM EXP | eps
-TERM -> * FACTOR TERM | FACTOR | / FACTOR TERM | % FACTOR TERM | eps
-FACTOR -> EXP | ID | intConst | eps
-STRUCT -> CMP | IFSTM | ITRSTM
-IFSTM -> if CONDITION then [ STMTL ] | if CONDITION then [ STMTL ] ELSESTM | if CONDITION then [ STMTL ] ELSEIFSTM ELSESTM | if CONDITION then [ STMTL ] ELSEIFSTM
-ELSEIFSTM -> else_if CONDITION then [ STMTL ]
+EXP ->  B A 
+A -> + B A | - B A | eps 
+B -> D C 
+C -> * D C | / D C | % D C | eps 
+D -> ( EXP ) | intConst | id 
+STRUCT ->  IFSTM | ITRSTM
+IFSTM -> if CONDITION then [ STMTL ] AUX3
+AUX3 -> eps | ELSESTM 
 ELSESTM -> else [ STMTL ]
 ITRSTM -> iterate [ STMT , CONDITION , STMT ] and_do [ STMTL ]
 CONDITION -> EXP RELATION EXP
 RELATION -> < | <= | = | <> | >= | >
-ID -> id
 TYPE1 -> integer | boolean | string
 CONST -> intConst | boolConst | stringConst
-ARRAYDEC -> dynamic-array [ TYPE1 ] ;
+ARRAYDEC -> dynamic_array [ TYPE1 ] 
 TYPE -> TYPE1 | ARRAYDEC
-DECLST -> TYPE ID ;
+ID -> id
+DECLST -> TYPE ID 

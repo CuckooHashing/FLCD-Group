@@ -26,7 +26,7 @@ class Parser:
         row = key 
         result = []
         first = self.ll1.real_first[value[0]]
-        if "eps" not in first:
+        if "eps" not in value:
             for terminal in first:
                 result.append((row, terminal))
         else:
@@ -45,18 +45,21 @@ class Parser:
         i=1
         for key in prods.keys():
             # print("ACI II KEY: ", key)
+            num_row =  self.rows.index(key)
+
             for rhs in prods[key]:
                 indices = self.apply_rules_to_obtain_position(key,rhs.split(" "))
+                # print("KEY II {0} RHS II {1} ".format(key, rhs))
                 # print(indices)
-                for row, column in indices:
-                    num_row = self.rows.index(row)
-                    num_col = self.columns.index(column)
+                # print(i)
+                for  column in indices:
+                    num_col = self.columns.index(column[1])
 
-                    if self.table[num_row][num_col] != None:
-                        print ("CONFLICT AT CELL (" + row + ", " + column + ")" )
+                    if self.table[num_row][num_col] != None and self.table[num_row][num_col] != i:
+                        print ("CONFLICT AT CELL (" + key + ", " + column[1] + ")" )
                     else:
                         self.table[num_row][num_col] = i
-                self.productions[i] = rhs
+                self.productions[i] = (key, rhs)
                 i+=1
         
         for terminal in self.ll1.grammar.terminals:
@@ -84,7 +87,7 @@ class Parser:
                 return pi 
             
             if self.table[self.rows.index(top_beta)][self.columns.index(top_alpha)] == None:
-                return False 
+                return alpha 
 
             prod_number = self.table[self.rows.index(top_beta)][self.columns.index(top_alpha)]
 
@@ -92,7 +95,7 @@ class Parser:
                 alpha.pop() 
                 beta.pop() 
             else:
-                rhs = self.productions[prod_number] 
+                rhs = self.productions[prod_number][1] 
                 toks = rhs.split(" ") 
                 toks.reverse() 
                 if toks[-1] == 'eps':
@@ -106,13 +109,14 @@ class Parser:
 
 
 
-pareser = Parser("gr1.txt")
-# pareser.table[0][0] = 7
-print(pareser.rows)
-print(pareser.columns)
-pareser.create_the_nightmare_table()
+if __name__ == "__main__":
+    pareser = Parser("grammar-ioana.txt")
+    # pareser.table[0][0] = 7
+    # print(pareser.rows)
+    # print(pareser.columns)
+    pareser.create_the_nightmare_table()
+    # for line in pareser.table:
+    #     print(line)
+    print(pareser.parse(['eps','}' ,';' ,'intConst', '<-' ,'id','{','main_body'], ['eps', 'START']))
+    # print(pareser.parse(['eps','}',';', ')','stringConst','(','read_integer','<-','id','{','main_body'], ['eps', 'START']))
 
-for line in pareser.table:
-    print(line)
-
-print(pareser.parse(['eps', 'a', '+', 'a'], ['eps', 'S']))
